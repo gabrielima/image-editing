@@ -23,34 +23,39 @@
 .options__button { margin: 5px; }
 
 .jumbotron {
+  border: 3px dashed transparent;
+}
+
+.canvas-wrapper {
   padding: 0!important;
 }
 
-.jumbotron,
-.jumbotron img {
+.canvas-wrapper,
+.canvas-wrapper img {
   position: relative;
   width: 100%;
   height: 100%;
   min-height: 450px;
 }
 
-.jumbotron { 
+.canvas-wrapper { 
   color: #aaa;
-  border: 3px dashed;
+  border-color: #aaa;
   font-size: 20px;
 }
 
-.jumbotron.loaded { border: 0; }
+.canvas-wrapper.loaded { border-color: transparent; }
 
-.jumbotron:after { 
+.canvas-wrapper:after { 
   content: 'Arraste uma imagem'; 
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  text-align: center;
 }
 
-.jumbotron.loaded:after { 
+.canvas-wrapper.loaded:after { 
   content: '';
 }
 

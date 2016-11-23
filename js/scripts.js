@@ -1,16 +1,12 @@
 $(document).ready(function() {
-	$('button').attr('disabled', true);
+	$('.options__button').attr('disabled', true);
 
-	var canvas = document.getElementById('canvas'),
-		context = canvas.getContext("2d"),
-		image, imageOriginal;
+	var canvas = get('canvas'),
+		context = canvas.getContext("2d");
+
+	var image = {};
 		
-	$('#canvas').on("dragover", function (event) {
-		event.preventDefault();
-		event.stopPropagation();
-	});
-
-	$('#canvas').on("dragenter", function (event) {
+	$('#canvas').on("dragover dragenter", function (event) {
 		event.preventDefault();
 		event.stopPropagation();
 	});
@@ -20,77 +16,126 @@ $(document).ready(function() {
 		
 		if (files.length > 0) {
 			var file = files[0];
+			/* save original name */
+			image.name = file.name;
 			
 			if (typeof FileReader !== "undefined" && file.type.indexOf("image") != -1) {
 				event.preventDefault();
 				event.stopPropagation();	
 
 				var reader = new FileReader();
-
-				reader.onload = function (event) {
-					image = new Image();
-					image.src = event.target.result;
-					image.width = canvas.width;
-					image.height = canvas.height;
-
-					image.onload = function(){
-						//drawImageScaled(image, context);
-						context.drawImage(image, 0, 0, 100, 100 * (image.height / image.width));
-					};					
-
-					imageOriginal = new Image();
-					imageOriginal.src = event.target.result;
-					imageOriginal.id = "imageOrigial";
-				};
-
 				reader.readAsDataURL(file);
+				reader.onload = function (event) {
+					image.original = new Image();
+					image.withoutFilter = new Image();
+					image.current = new Image();
+					
+					image.original.src = event.target.result;
+					image.withoutFilter.src = event.target.result;
+					image.current.src = event.target.result;
+
+					image.current.onload = function(){
+						drawImageScaled(image.current);
+					};	
+
+					/* save original values */
+					image.width = image.original.width;				
+					image.height = image.original.height;				
+				};
 			}
 		}
 
-		$('button').attr('disabled', false);
-		$('.jumbotron').addClass('loaded');
+		$('.options__button').attr('disabled', false);
+		$('.canvas-wrapper').addClass('loaded');
 	});
 
 	$('#save').click(function (event) {
-		//window.open(canvas.toDataURL("image/png"));
-		event.preventDefault();
+		/* insert '-modified' right before the image extension */
+		var newImageName = image.name.substring(0, image.name.lastIndexOf(".")) + 
+			"-modified" + 
+			image.name.substring(image.name.lastIndexOf("."));
+
+		// var defaultWidth = get('canvas').width;
+		// var defaultHeight = get('canvas').height;
+
+		// get('canvas').width = image.width;
+		// get('canvas').height = image.height;
+
+		var link = get('save');
+		link.href = get('canvas').toDataURL();
+		link.download = newImageName; 
+
+		// get('canvas').width = defaultWidth;
+		// get('canvas').height = defaultHeight;
+	});	
+
+	$('#reset').click(function (event) {
+		image.current = image.original;
+		drawImageScaled(image.current);
+	});	
+
+	$('#rotateLeft').click(function (event) {
+		image.current = image.original;
+		drawImageScaled(image.current);
+	});	
+
+	$('#rotateRight').click(function (event) {
+		image.current = image.original;
+		drawImageScaled(image.current);
 	});	
 
 	$('#normal').click(function (event) {
-		drawImageScaled(imageOriginal, context);
-		event.preventDefault();
+		image.current = image.withoutFilter;
+		drawImageScaled(image.current);
 	});
 
-	$('#grayscale').click(function (event) {
-		//console.log($('#image'));
-		console.log(context.getImageData(0,0,image.width,image.height));
-		grayscale(context.getImageData(0,0,image.width,image.height));
-		event.preventDefault();
+	$('#grayscale').click(function () {
+		applyFilter(Filters.grayscale);
 	});
 
-	function grayscale(image) {
-		console.log(image);
-	  var d = image.data;
-	  for (var i=0; i<d.length; i+=4) {
-	    var r = d[i];
-	    var g = d[i+1];
-	    var b = d[i+2];
-	    var v = 0.2126*r + 0.7152*g + 0.0722*b;
-	    d[i] = d[i+1] = d[i+2] = v
-	  }
-	  return image;
+	$('#moreBrightness').click(function () {
+		applyFilter(Filters.brightness, [10]);
+	});
+
+	$('#lessBrightness').click(function () {
+		applyFilter(Filters.brightness, [-10]);
+	});
+
+	$('#threshold').click(function () {
+		applyFilter(Filters.threshold, [20]);
+	});
+
+	$('#invert').click(function () {
+		applyFilter(Filters.invert);
+	});
+
+	$('#sepia').click(function () {
+		applyFilter(Filters.sepia);
+	});
+
+	function applyFilter(filter, args) {
+		args = args || [];
+		args.unshift(context.getImageData(0, 0, image.current.width, image.current.height));
+		context.putImageData(filter(args), 0, 0);
 	}
 
-function drawImageScaled(img, ctx) {
-   var canvas = ctx.canvas;
-   var hRatio = canvas.width  / img.width;
-   var vRatio =  canvas.height / img.height;
-   var ratio  = Math.min ( hRatio, vRatio );
-   var centerShift_x = ( canvas.width - img.width*ratio ) / 2;
-   var centerShift_y = ( canvas.height - img.height*ratio ) / 2;  
-   ctx.clearRect(0,0,canvas.width, canvas.height);
-   ctx.drawImage(img, 0,0, img.width, img.height,
-                      centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);
-		console.log(img, 0,0, img.width, img.height,centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);  
-}	
+	function get(id) {
+		return document.getElementById(id);
+	}
+
+	/**
+	 *	Scales image to fit inside canvas.
+	 *  For images with greater width and/or height than canvas' width and/or height
+	 */
+	function drawImageScaled(img) {
+		var canvas = context.canvas;
+		var hRatio = canvas.width /img.width;
+		var vRatio =  canvas.height / img.height;
+		var ratio  = Math.min ( hRatio, vRatio );
+		var centerX = ( canvas.width - ( img.width * ratio ) ) / 2;
+		var centerY = ( canvas.height - ( img.height * ratio ) ) / 2;  
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		context.drawImage(img, 0, 0, img.width, img.height, 
+			centerX, centerY, ( img.width * ratio ), ( img.height * ratio ));
+	}	
 });

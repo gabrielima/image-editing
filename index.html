@@ -11,7 +11,7 @@
 		<header class="header">
 	     <nav>
 	      <ul class="nav nav-pills pull-right">
-	        <li role="presentation" class="active"><a href="./">Início</a></li>
+	        <li role="presentation" class="active"><a href="index.html">Início</a></li>
 	        <li role="presentation"><a href="sobre.html">Sobre</a></li>
 	      </ul>
 	    </nav>
@@ -25,11 +25,18 @@
 
 			<div class="text-center options-wrapper">
 				<div class="options options--editing">
-					<button class="btn btn-default options__button">Girar para a esquerda</button>
-					<button class="btn btn-default options__button">Girar para a direita</button>
-					<button class="btn btn-default options__button">Inverter horizontalmente</button>
-					<button class="btn btn-default options__button">Inverter verticalmente</button>
-					<button class="btn btn-default options__button">Recortar</button>
+					<button class="btn btn-default options__button" id="rotateLeft">Girar para a esquerda</button>
+					<button class="btn btn-default options__button" id="rotateRight">Girar para a direita</button>
+					<button class="btn btn-default options__button" id="invertHorizontal">Inverter horizontalmente</button>
+					<button class="btn btn-default options__button" id="invertVertical">Inverter verticalmente</button>
+					<button class="btn btn-default options__button" id="crop">Recortar</button>
+				</div>
+
+				<hr>
+
+				<div class="options options--filtering">
+					<button class="btn btn-default options__button" id="moreBrightness">+ Brilho</button>
+					<button class="btn btn-default options__button" id="lessBrightness">- Brilho</button>
 				</div>
 
 				<hr>
@@ -37,6 +44,8 @@
 				<div class="options options--filtering">
 					<button class="btn btn-default options__button" id="normal">Normal</button>
 					<button class="btn btn-default options__button" id="grayscale">Preto e branco</button>
+					<button class="btn btn-default options__button" id="threshold">Threshold</button>
+					<button class="btn btn-default options__button" id="invert">Inverter</button>
 					<button class="btn btn-default options__button" id="sepia">Sépia</button>
 					<button class="btn btn-default options__button" id="sharpen">Sharpen</button>
 					<button class="btn btn-default options__button" id="blur">Blur</button>
@@ -48,16 +57,30 @@
 					<button class="btn btn-default options__button">Escrever</button>
 					<button class="btn btn-default options__button">Criar retângulo</button>
 				</div>
+
+				<hr>
+
+				<div class="options options--tools">
+					<button class="btn btn-danger options__button" id="reset">Reset</button>
+					<a class="btn btn-success options__button" id="save">Salvar</a>
+				</div>
 			</div>
 		</section>
 
 		<footer class="footer">
-			<p>Gabriel de Lima Rabelo e Pablo Almeida de Andrade</p>
+			<p>
+				<a href="http://github.com/gabrielima">Gabriel de Lima Rabelo</a> 
+				e
+				<a href="http://github.com/pabloff9">Pablo Almeida de Andrade</a>
+			</p>
 			<p>Novembro - 2016</p>
 		</footer>
-
-		<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
-		<script type="text/javascript" src="js/scripts.js"></script>
 	</div>
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.min.js"></script>
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="js/processing.js"></script>
+	<script type="text/javascript" src="js/filters.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
 </body>
 </html>

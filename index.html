@@ -25,44 +25,137 @@
 
 			<div class="text-center options-wrapper">
 				<div class="options options--editing">
-					<button class="btn btn-default options__button" id="rotateLeft">Girar para a esquerda</button>
-					<button class="btn btn-default options__button" id="rotateRight">Girar para a direita</button>
-					<button class="btn btn-default options__button" id="invertHorizontal">Inverter horizontalmente</button>
-					<button class="btn btn-default options__button" id="invertVertical">Inverter verticalmente</button>
-					<button class="btn btn-default options__button" id="crop">Recortar</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="rotateLeft" 
+						data-args="">
+						Girar para a esquerda
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="rotateRight" 
+						data-args="">
+						Girar para a direita
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="invertHorizontal" 
+						data-args="">
+						Inverter horizontalmente
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="invertVertical" 
+						data-args="">
+						Inverter verticalmente
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="crop" 
+						data-args="">
+						Recortar
+					</button>
 				</div>
 
 				<hr>
 
 				<div class="options options--filtering">
-					<button class="btn btn-default options__button" id="moreBrightness">+ Brilho</button>
-					<button class="btn btn-default options__button" id="lessBrightness">- Brilho</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="brightness" 
+						data-args='10'>
+						+ Brilho
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="brightness" 
+						data-args='-10'>
+						- Brilho
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="contrast" 
+						data-args='10'>
+						+ Contraste
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="contrast" 
+						data-args='-10'>
+						- Contraste
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="saturation" 
+						data-args='1'>
+						+ Saturação
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="saturation" 
+						data-args='-1'>
+						- Saturação
+					</button>
 				</div>
 
 				<hr>
 
 				<div class="options options--filtering">
-					<button class="btn btn-default options__button" id="normal">Normal</button>
-					<button class="btn btn-default options__button" id="grayscale">Preto e branco</button>
-					<button class="btn btn-default options__button" id="threshold">Threshold</button>
-					<button class="btn btn-default options__button" id="invert">Inverter</button>
-					<button class="btn btn-default options__button" id="sepia">Sépia</button>
-					<button class="btn btn-default options__button" id="sharpen">Sharpen</button>
-					<button class="btn btn-default options__button" id="blur">Blur</button>
+					<button 
+						id="normal"
+						class="btn btn-default option">
+						Normal
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="grayscale" 
+						data-args="">
+						Preto e branco
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="threshold" 
+						data-args="">
+						Threshold
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="invert" 
+						data-args="">
+						Inverter
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="sepia" 
+						data-args="">
+						Sépia
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="sharpen" 
+						data-args="">
+						Sharpen
+					</button>
+					<button 
+						class="btn btn-default option" 
+						data-filter="blur" 
+						data-args="">
+						Blur
+					</button>
 				</div>
 
 				<hr>
 
 				<div class="options options--tools">
-					<button class="btn btn-default options__button">Escrever</button>
-					<button class="btn btn-default options__button">Criar retângulo</button>
+					<button class="btn btn-default option">Escrever</button>
+					<button class="btn btn-default option">Criar retângulo</button>
 				</div>
 
 				<hr>
 
 				<div class="options options--tools">
-					<button class="btn btn-danger options__button" id="reset">Reset</button>
-					<a class="btn btn-success options__button" id="save">Salvar</a>
+					<button class="btn btn-danger option" id="reset">Reset</button>
+					<a class="btn btn-success option" id="save">Salvar</a>
 				</div>
 			</div>
 		</section>
@@ -77,9 +170,7 @@
 		</footer>
 	</div>
 
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.min.js"></script>
 	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
-	<script type="text/javascript" src="js/processing.js"></script>
 	<script type="text/javascript" src="js/filters.js"></script>
 	<script type="text/javascript" src="js/scripts.js"></script>
 </body>

@@ -1,10 +1,9 @@
 $(document).ready(function() {
-	$('.options__button').attr('disabled', true);
-
-	var canvas = get('canvas'),
-		context = canvas.getContext("2d");
-
 	var image = {};
+	var canvas = get('canvas');
+	var context = canvas.getContext("2d");
+
+	$('.option').attr('disabled', true);
 		
 	$('#canvas').on("dragover dragenter", function (event) {
 		event.preventDefault();
@@ -45,7 +44,7 @@ $(document).ready(function() {
 			}
 		}
 
-		$('.options__button').attr('disabled', false);
+		$('.option').attr('disabled', false);
 		$('.canvas-wrapper').addClass('loaded');
 	});
 
@@ -74,49 +73,29 @@ $(document).ready(function() {
 		drawImageScaled(image.current);
 	});	
 
-	$('#rotateLeft').click(function (event) {
-		image.current = image.original;
-		drawImageScaled(image.current);
-	});	
-
-	$('#rotateRight').click(function (event) {
-		image.current = image.original;
-		drawImageScaled(image.current);
-	});	
-
-	$('#normal').click(function (event) {
+	$('#normal').click(function(event) {
 		image.current = image.withoutFilter;
-		drawImageScaled(image.current);
+		drawImageScaled(image.current);		
 	});
 
-	$('#grayscale').click(function () {
-		applyFilter(Filters.grayscale);
-	});
+	$('.option').click(function(event) {
+		event.preventDefault();
 
-	$('#moreBrightness').click(function () {
-		applyFilter(Filters.brightness, [10]);
-	});
-
-	$('#lessBrightness').click(function () {
-		applyFilter(Filters.brightness, [-10]);
-	});
-
-	$('#threshold').click(function () {
-		applyFilter(Filters.threshold, [20]);
-	});
-
-	$('#invert').click(function () {
-		applyFilter(Filters.invert);
-	});
-
-	$('#sepia').click(function () {
-		applyFilter(Filters.sepia);
+		if($(this).data('filter')) {
+			var filter = $(this).data('filter');
+			var args = $(this).data('args') || null;
+			
+			applyFilter(Filters[filter], [args]);
+		}
 	});
 
 	function applyFilter(filter, args) {
-		args = args || [];
-		args.unshift(context.getImageData(0, 0, image.current.width, image.current.height));
-		context.putImageData(filter(args), 0, 0);
+		var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+		
+		var filterArgs = args || [];
+		filterArgs.unshift(imgData);
+				
+		context.putImageData(filter(filterArgs), 0, 0);
 	}
 
 	function get(id) {

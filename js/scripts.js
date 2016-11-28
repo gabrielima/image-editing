@@ -1,9 +1,10 @@
 $(document).ready(function() {
-	var image = {};
+	var image = {}, draw = false, isDrawing = false;
 	var canvas = get('canvas');
 	var context = canvas.getContext("2d");
 
 	$('.option').attr('disabled', true);
+	$('.form-group').hide();
 		
 	$('#canvas').on("dragover dragenter", function (event) {
 		event.preventDefault();
@@ -54,18 +55,9 @@ $(document).ready(function() {
 			"-modified" + 
 			image.name.substring(image.name.lastIndexOf("."));
 
-		// var defaultWidth = get('canvas').width;
-		// var defaultHeight = get('canvas').height;
-
-		// get('canvas').width = image.width;
-		// get('canvas').height = image.height;
-
 		var link = get('save');
 		link.href = get('canvas').toDataURL();
 		link.download = newImageName; 
-
-		// get('canvas').width = defaultWidth;
-		// get('canvas').height = defaultHeight;
 	});	
 
 	$('#reset').click(function (event) {
@@ -78,6 +70,20 @@ $(document).ready(function() {
 		drawImageScaled(image.current);		
 	});
 
+	$('#write').click(function(event) {
+		$('.form-group').show();
+	});
+
+	$('#writeForm').submit(function(event) {
+		event.preventDefault();
+		
+		context.fillStyle = "black";
+	  context.font = "bold 20px Arial";
+	  context.fillText($('#writeInput').val(), 150, 400);	
+	  $('#writeInput').val("");
+	  $('.form-group').hide();
+	});
+
 	$('.option').click(function(event) {
 		event.preventDefault();
 
@@ -88,6 +94,43 @@ $(document).ready(function() {
 			applyFilter(Filters[filter], [args]);
 		}
 	});
+
+	// $('#draw').click(function(event) {
+	// 	draw = !draw;
+	// });
+
+	// $('canvas').on('mousemove', function(e) {
+	// 	if(draw) {
+	//  		if (!isDrawing)
+	// 	     return;
+		  
+	// 	  var x = e.pageX - context.offsetLeft;
+	// 	  var y = e.pageY - context.offsetTop;
+	// 	  var radius = 10; // or whatever
+	// 	  var fillColor = '#ff0000';
+
+	// 		context.fillCircle = function(x, y, radius, fillColor) {
+	//       context.moveTo(x,0);
+	//       context.lineTo(x,canvas.height);
+	//       context.moveTo(0,y);
+	//       context.lineTo(canvas.width,y);
+	//       context.stroke();
+ //      };
+      
+
+ //      context.fillCircle(x, y, radius, fillColor);
+	// 	};
+	// });
+
+	// $('canvas').on('mousedown', function(e) {
+	// 	if(draw)
+	//   	isDrawing = true;
+	// });
+
+	// $('canvas').on('mouseup', function(e) {
+	// 	if(draw)
+	// 	  isDrawing = false;
+	// });
 
 	function applyFilter(filter, args) {
 		var imgData = context.getImageData(0, 0, canvas.width, canvas.height);

@@ -115,7 +115,7 @@
 					<button 
 						class="btn btn-default option" 
 						data-filter="threshold" 
-						data-args="">
+						data-args="100">
 						Threshold
 					</button>
 					<button 
@@ -147,8 +147,17 @@
 				<hr>
 
 				<div class="options options--tools">
-					<button class="btn btn-default option">Escrever</button>
+					<button class="btn btn-default option" id="write">Escrever Legenda</button>
 					<button class="btn btn-default option">Criar retângulo</button>
+					<button class="btn btn-default option" id="draw">Desenhar</button>
+	
+					<form action="" id="writeForm" class="form-inline">
+						<div class="form-group">
+							<label for="">Legenda</label>
+							<input type="text" class="form-control" id="writeInput">
+							<input type="submit" class="btn btn-default" value="Escrever">
+						</div>
+					</form>
 				</div>
 
 				<hr>

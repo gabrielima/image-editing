@@ -1,19 +1,12 @@
-Array.prototype.swap = function (x,y) {
-  var b = this[x];
-  this[x] = this[y];
-  this[y] = b;
-  return this;
-}
-
 var Filters = {};
 
-Filters.rotateLeft = function(args) {
+Filters.rotateRight = function(args) {
   transpose(args);
   Filters.invertHorizontal(args);
   return args.imgData;
 };
 
-Filters.rotateRight = function(args) {
+Filters.rotateLeft = function(args) {
   transpose(args);
   Filters.invertVertical(args);
 
@@ -209,7 +202,6 @@ Filters.convolution = function(imageData, filterMatrix, filterWidth, filterHeigh
 };
 
 Filters.crop = function(args) {
-  console.log('crop');
   var imgData = args.imgData.data;
   var canvas = args.canvas;
   var len = canvas.width * 4; // width == height
@@ -232,8 +224,6 @@ Filters.crop = function(args) {
 }
 
 Filters.box = function(args) {
-  console.log(args);
-  console.log('box');
   var imgData = args.imgData.data;
   var canvas = args.canvas;
   var len = canvas.width * 4; // width == height

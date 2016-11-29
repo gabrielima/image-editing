@@ -76,12 +76,14 @@ $(document).ready(function() {
 		$('.cropMessage').show();
 	});
 
+	$('#box').click(function(event) {
+		boxData.status = 1;
+		$('.boxMessage').show();
+	});	
+
 	$('#canvas').click(function(event) {
 		event.preventDefault();
-		console.log(cropData);
 		
-		if(cropData.status === 0) return;
-
 		if(cropData.status === 1) {
 			cropData.status++;
 			cropData.x1 = getMousePos(canvas, event).x;
@@ -102,19 +104,7 @@ $(document).ready(function() {
 			cropData.status = 0;
 			$('.cropMessage').hide();
 		}
-	});
-
-	$('#box').click(function(event) {
-		boxData.status = 1;
-		$('.boxMessage').show();
-	});
-
-	$('#canvas').click(function(event) {
-		event.preventDefault();
-		console.log(boxData);
 		
-		if(boxData.status === 0) return;
-
 		if(boxData.status === 1) {
 			boxData.status++;
 			boxData.x1 = getMousePos(canvas, event).x;
@@ -137,7 +127,7 @@ $(document).ready(function() {
 			try{applyFilter(Filters.box, args);}catch(e){console.log(e)};
 
 			boxData.status = 0;
-			$('.drawMessage').hide();
+			$('.boxMessage').hide();
 		}
 	});
 

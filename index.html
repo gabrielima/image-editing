@@ -50,11 +50,14 @@
 						Inverter verticalmente
 					</button>
 					<button 
-						class="btn btn-default option " 
+						class="btn btn-default" 
+						id="crop"
 						data-filter="crop" 
 						data-args="">
 						Recortar
 					</button>
+
+					<div class="cropMessage alert alert-primary">Clique nos pontos esquerdo superior e no direito inferior da área que deseja recortar</div>
 				</div>
 
 				<hr>
@@ -131,8 +134,13 @@
 
 				<div class="options options--tools">
 					<button class="btn btn-default option" id="write">Escrever Legenda</button>
-					<button class="btn btn-default option">Criar retângulo</button>
 					<button class="btn btn-default option" id="draw">Desenhar</button>
+					<button 
+						class="btn btn-default" 
+						id="box"
+						data-filter="box" 
+						data-args="">Criar retângulo</button>
+					<div class="boxMessage alert alert-primary">Clique nos pontos esquerdo superior e no direito inferior da área que deseja criar o retângulo</div>
 	
 					<form action="" id="writeForm" class="form-inline">
 						<div class="form-group">

@@ -1,10 +1,14 @@
 $(document).ready(function() {
-	var image = {}, draw = false, isDrawing = false;
+	var image = {}, draw = false, isDrawing = false, cropData = {}, boxData = {};
 	var canvas = get('canvas');
 	var context = canvas.getContext("2d");
+	cropData.status = 0;
+	boxData.status = 0;
 
-	$('.option').attr('disabled', true);
+	$('.btn-default').attr('disabled', true);
 	$('.form-group').hide();
+	$('.cropMessage').hide();
+	$('.boxMessage').hide();
 		
 	$('#canvas').on("dragover dragenter", function (event) {
 		event.preventDefault();
@@ -43,7 +47,7 @@ $(document).ready(function() {
 			}
 		}
 
-		$('.option').attr('disabled', false);
+		$('.btn-default').attr('disabled', false);
 		$('.canvas-wrapper').addClass('loaded');
 	});
 
@@ -67,12 +71,82 @@ $(document).ready(function() {
 		$('.form-group').show();
 	});
 
+	$('#crop').click(function(event) {
+		cropData.status = 1;
+		$('.cropMessage').show();
+	});
+
+	$('#canvas').click(function(event) {
+		event.preventDefault();
+		console.log(cropData);
+		
+		if(cropData.status === 0) return;
+
+		if(cropData.status === 1) {
+			cropData.status++;
+			cropData.x1 = getMousePos(canvas, event).x;
+			cropData.y1 = getMousePos(canvas, event).y;
+		}
+		
+		else if(cropData.status === 2) {
+			cropData.x2 = getMousePos(canvas, event).x;
+			cropData.y2 = getMousePos(canvas, event).y;
+
+			var args = {
+				cropData : cropData
+			};
+
+			
+			try{applyFilter(Filters.crop, args);}catch(e){console.log(e)};
+
+			cropData.status = 0;
+			$('.cropMessage').hide();
+		}
+	});
+
+	$('#box').click(function(event) {
+		boxData.status = 1;
+		$('.boxMessage').show();
+	});
+
+	$('#canvas').click(function(event) {
+		event.preventDefault();
+		console.log(boxData);
+		
+		if(boxData.status === 0) return;
+
+		if(boxData.status === 1) {
+			boxData.status++;
+			boxData.x1 = getMousePos(canvas, event).x;
+			boxData.y1 = getMousePos(canvas, event).y;
+		}
+		
+		else if(boxData.status === 2) {
+			boxData.x2 = getMousePos(canvas, event).x;
+			boxData.y2 = getMousePos(canvas, event).y;
+
+			var args = {
+				boxData : boxData,
+				r: 97,
+				g: 179,
+				b: 249,
+				a: 1
+			};
+
+			
+			try{applyFilter(Filters.box, args);}catch(e){console.log(e)};
+
+			boxData.status = 0;
+			$('.drawMessage').hide();
+		}
+	});
+
 	$('#writeForm').submit(function(event) {
 		event.preventDefault();
 		
 		context.fillStyle = "black";
 	  context.font = "bold 20px Arial";
-	  context.fillText($('#writeInput').val(), 150, 600);	
+	  context.fillText($('#writeInput').val(), 200, 500);	
 	  $('#writeInput').val("");
 	  $('.form-group').hide();
 	});
@@ -155,4 +229,12 @@ $(document).ready(function() {
 		context.drawImage(img, 0, 0, img.width, img.height, 
 			centerX, centerY, ( img.width * ratio ), ( img.height * ratio ));
 	}	
+
+	function getMousePos(canvas, event) {
+	    var rect = canvas.getBoundingClientRect();
+	    return {
+	      x: event.clientX - rect.left,
+	      y: event.clientY - rect.top
+	    };
+	  }	
 });

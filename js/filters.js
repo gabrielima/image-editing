@@ -8,26 +8,22 @@ Array.prototype.swap = function (x,y) {
 var Filters = {};
 
 Filters.rotateLeft = function(args) {
-  var imgData = args.imgData.data;
-  var imgDataCopy = imgData.slice();
-  var canvas = args.canvas;
-  var context = args.context;
-  var len = canvas.width * 4; // width == height
+  transpose(args);
+  Filters.invertHorizontal(args);
+  return args.imgData;
+};
 
-  for ( var i = 0; i < len; i++ )
-    for ( var j = 0; j < len; j++ )
-      imgData[(j * len) + i] = imgDataCopy[(i * len) + j]; 
+Filters.rotateRight = function(args) {
+  transpose(args);
+  Filters.invertVertical(args);
 
-  // for ( var j = 0; j < width; j++ )
-  //   for ( var i = height-1, k = 0; i >= 0, k < height ; i--, k++ )
-  //     imgDataCopy[(i * height) + j] = imgData[(j * width) + i];
-  
   return args.imgData;
 };
 
 Filters.invertHorizontal = function(args) {
   var imgData = args.imgData.data;
   var imgDataCopy = imgData.slice();
+  var canvas = args.canvas;
   var len = canvas.width * 4; // width == height
   // * 4 because for each pixel, there are 4 layers: r, g, b, a
 
@@ -45,6 +41,7 @@ Filters.invertHorizontal = function(args) {
 Filters.invertVertical = function(args) {
   var imgData = args.imgData.data;
   var imgDataCopy = imgData.slice();
+  var canvas = args.canvas;  
   var len = canvas.width * 4; // width == height
 
   for ( var i = 0; i < len; i += 4 )
@@ -210,3 +207,65 @@ Filters.convolution = function(imageData, filterMatrix, filterWidth, filterHeigh
 
   return imageData;
 };
+
+Filters.crop = function(args) {
+  console.log('crop');
+  var imgData = args.imgData.data;
+  var canvas = args.canvas;
+  var len = canvas.width * 4; // width == height
+  // * 4 because for each pixel, there are 4 layers: r, g, b, a
+
+  for ( var i = 0; i < len / 4; i++ )
+    for ( var j = 0; j < len; j += 4 ) {
+      if(  i <= args.cropData.y1 
+        || j <= (args.cropData.x1 * 4)
+        || i > args.cropData.y2
+        || j > (args.cropData.x2 * 4)) {
+        imgData[(i * len) + j]     = 0;
+        imgData[(i * len) + j + 1] = 0;
+        imgData[(i * len) + j + 2] = 0;
+        imgData[(i * len) + j + 3] = 0;
+      }
+    }
+ 
+  return args.imgData;  
+}
+
+Filters.box = function(args) {
+  console.log(args);
+  console.log('box');
+  var imgData = args.imgData.data;
+  var canvas = args.canvas;
+  var len = canvas.width * 4; // width == height
+  // * 4 because for each pixel, there are 4 layers: r, g, b, a
+
+  for ( var i = 0; i < len / 4; i++ )
+    for ( var j = 0; j < len; j += 4 ) {
+      if((  i > args.boxData.y1 
+        && j >= (args.boxData.x1 * 4)) 
+        && (i <= args.boxData.y2
+        && j < (args.boxData.x2 * 4))) {
+        imgData[(i * len) + j]     = args.r;
+        imgData[(i * len) + j + 1] = args.g;
+        imgData[(i * len) + j + 2] = args.b;
+      }
+    }
+ 
+  return args.imgData;  
+}
+
+function transpose(args) {
+  var imgData = args.imgData.data;
+  var imgDataCopy = imgData.slice();
+  var canvas = args.canvas;
+  var context = args.context;  
+  var len = canvas.width * 4; // width == height
+
+  for ( var i = 0, x = 0; i < len; i++, x+=4 )
+    for ( var j = 0, y = 0; j < len; j+=4, y++ ) {
+      imgData[(i * len) + j]     = imgDataCopy[(y * len) + x]; 
+      imgData[(i * len) + j + 1] = imgDataCopy[(y * len) + x + 1]; 
+      imgData[(i * len) + j + 2] = imgDataCopy[(y * len) + x + 2]; 
+      imgData[(i * len) + j + 3] = imgDataCopy[(y * len) + x + 3]; 
+    }
+}

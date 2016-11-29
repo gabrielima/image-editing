@@ -20,8 +20,6 @@
 	margin: 15px 0;
 }
 
-.options__button { margin: 5px; }
-
 .jumbotron {
   border: 3px dashed transparent;
 }
@@ -59,11 +57,6 @@
   content: '';
 }
 
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
 
 form {
   margin: 25px 0;

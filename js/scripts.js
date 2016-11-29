@@ -27,11 +27,9 @@ $(document).ready(function() {
 				reader.readAsDataURL(file);
 				reader.onload = function (event) {
 					image.original = new Image();
-					image.withoutFilter = new Image();
 					image.current = new Image();
 					
 					image.original.src = event.target.result;
-					image.withoutFilter.src = event.target.result;
 					image.current.src = event.target.result;
 
 					image.current.onload = function(){
@@ -65,11 +63,6 @@ $(document).ready(function() {
 		drawImageScaled(image.current);
 	});	
 
-	$('#normal').click(function(event) {
-		image.current = image.withoutFilter;
-		drawImageScaled(image.current);		
-	});
-
 	$('#write').click(function(event) {
 		$('.form-group').show();
 	});
@@ -86,12 +79,13 @@ $(document).ready(function() {
 
 	$('.option').click(function(event) {
 		event.preventDefault();
+		var args = {};
 
 		if($(this).data('filter')) {
 			var filter = $(this).data('filter');
-			var args = $(this).data('args') || null;
+			args.data = $(this).data('args');
 			
-			applyFilter(Filters[filter], [args]);
+			applyFilter(Filters[filter], args);
 		}
 	});
 
@@ -132,18 +126,19 @@ $(document).ready(function() {
 	// 	  isDrawing = false;
 	// });
 
-	function applyFilter(filter, args) {
-		var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
-		
-		var filterArgs = args || [];
-		filterArgs.unshift(imgData);
+	function applyFilter(filter, args) {		
+		args.imgData = context.getImageData(0, 0, canvas.width, canvas.height);;
+		args.canvas = get('canvas');
+		args.context = context;
 				
-		context.putImageData(filter(filterArgs), 0, 0);
+		context.putImageData(filter(args), 0, 0);
 	}
 
 	function get(id) {
 		return document.getElementById(id);
 	}
+
+
 
 	/**
 	 *	Scales image to fit inside canvas.

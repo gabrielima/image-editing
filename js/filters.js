@@ -1,27 +1,68 @@
 var Filters = {};
 
 Filters.rotateLeft = function(args) {
-  var imageData = args[0];
-  var canvas = args[1];
-  var context = args[2];
+  var imgData = args.imgData.data;
+  var imgDataCopy = imgData.slice();
+  var canvas = args.canvas;
+  var context = args.context;
+  var len = canvas.width * 4; // width == height
 
-  canvas.width = img.width;
-  canvas.height = img.height;
-  context.save();
-  context.translate(img.width / 2, img.height / 2);
-  context.rotate(Math.PI/2);
-  context.drawImage(
-    img.current, -(img.width / 2), -(img.height / 2)
-  );
-  context.restore();
+  console.log(imgData);
 
-  return true;
+  for ( var i = 0; i < len; i++ )
+    for ( var j = 0; j < len; j++ )
+      imgData[(j * len) + i] = imgDataCopy[(i * len) + j]; 
+
+  // for ( var j = 0; j < width; j++ )
+  //   for ( var i = height-1, k = 0; i >= 0, k < height ; i--, k++ )
+  //     imgDataCopy[(i * height) + j] = imgData[(j * width) + i];
+  
+  return args.imgData;
+};
+
+Filters.invertHorizontal = function(args) {
+  var imgData = args.imgData.data;
+  var imgDataCopy = imgData.slice();
+  var canvas = args.canvas;
+  var context = args.context;
+  var len = canvas.width * 4; // width == height
+
+  console.log(imgData);
+
+  for ( var i = 0; i < len; i++ )
+    for ( var j = 0, k = len - 4; j < len; j += 4, k -= 4 ) {
+      imgData[(i * len) + k] = imgDataCopy[(i * len) + j]; 
+      imgData[(i * len) + k + 1] = imgDataCopy[(i * len) + j + 1]; 
+      imgData[(i * len) + k + 2] = imgDataCopy[(i * len) + j + 2]; 
+      imgData[(i * len) + k + 3] = imgDataCopy[(i * len) + j + 3]; 
+    }
+
+  return args.imgData;
+};
+
+Filters.invertVertical = function(args) {
+  var imgData = args.imgData.data;
+  var imgDataCopy = imgData.slice();
+  var canvas = args.canvas;
+  var context = args.context;
+  var len = canvas.width * 4; // width == height
+
+  console.log(imgData);
+
+  for ( var i = 0, k = len - 4; i < len; i += 4, k -= 4 ) {
+    for ( var j = 0; j < len; j++ )
+      imgData[(k * len) + k] = imgDataCopy[(i * len) + j]; 
+      imgData[(k * len) + k + 1] = imgDataCopy[(i * len) + j + 1]; 
+      imgData[(k * len) + k + 2] = imgDataCopy[(i * len) + j + 2]; 
+      imgData[(k * len) + k + 3] = imgDataCopy[(i * len) + j + 3]; 
+    }
+
+  return args.imgData;
 };
 
 Filters.brightness = function(args) {
-  var imageData = args[0].data;
-  var value = args[1];
-  console.log(args);
+  var imageData = args.imgData.data;
+  var value = args.data;
 
   for ( var i = 0; i < imageData.length; i += 4 ) {
     imageData[i] += value;
@@ -29,12 +70,12 @@ Filters.brightness = function(args) {
     imageData[i+2] += value;
   }
 
-  return args[0];
+  return args.imgData;
 };
 
 Filters.contrast = function(args) {
-  var imageData = args[0].data;
-  var value = args[1];
+  var imageData = args.imgData.data;
+  var value = args.data;
   var factor = (259 * (value + 255)) / (255 * (259 - value));
 
   for ( var i = 0; i < imageData.length; i += 4 ) {
@@ -43,14 +84,14 @@ Filters.contrast = function(args) {
     imageData[i+2] = factor * (imageData[i+2] - 128) + 128;
   }
 
-  return args[0];
+  return args.imgData;
 };
 
 Filters.saturation = function(args) {
   /* http://alienryderflex.com/saturation.html */
 
-  var imageData = args[0].data;
-  var value = args[1];
+  var imageData = args.imgData.data;
+  var value = args.data;
 
   var Pr = .299;
   var Pg = .587;
@@ -72,11 +113,11 @@ Filters.saturation = function(args) {
     imageData[i+2] = p + (b - p) * value;
   }
 
-  return args[0];
+  return args.imgData;
 };
 
 Filters.grayscale = function(args) {
-  var imageData = args[0].data;
+  var imageData = args.imgData.data;
 
   for ( var i = 0; i< imageData.length; i += 4 ) {
     var r = imageData[i];
@@ -87,12 +128,12 @@ Filters.grayscale = function(args) {
     imageData[i] = imageData[i+1] = imageData[i+2] = v;
   }
 
-  return args[0];
+  return args.imgData;
 };
 
 Filters.threshold = function(args) {
-  var imageData = args[0].data;
-  var threshold = args[1];
+  var imageData = args.imgData.data;
+  var threshold = args.data;
 
   for ( var i = 0; i < imageData.length; i += 4 ) {
     var r = imageData[i];
@@ -103,11 +144,11 @@ Filters.threshold = function(args) {
     imageData[i] = imageData[i+1] = imageData[i+2] = v;
   }
   
-  return args[0];
+  return args.imgData;
 };
 
 Filters.invert = function(args) {
-  var imageData = args[0].data;
+  var imageData = args.imgData.data;
 
   for ( var i = 0; i < imageData.length; i += 4 ) {
     imageData[i] = 255 - imageData[i];
@@ -115,11 +156,11 @@ Filters.invert = function(args) {
     imageData[i+2] = 255 - imageData[i+2];
   }
   
-  return args[0];
+  return args.imgData;
 };
 
 Filters.sepia = function(args) {
-  var imageData = args[0].data;
+  var imageData = args.imgData.data;
 
   for ( var i = 0; i < imageData.length; i += 4 ) {
     var r = imageData[i];
@@ -130,11 +171,11 @@ Filters.sepia = function(args) {
     imageData[i+2] = r * 0.272 + g * 0.534 + b * 0.131;
   }
   
-  return args[0];
+  return args.imgData;
 };
 
 Filters.blur = function(args) {
-  var imageData = args[0].data;
+  var imageData = args.imgData.data;
 
   var filterMatrix = [
    [0.0, 0.2,  0.0],

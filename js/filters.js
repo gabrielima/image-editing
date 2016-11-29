@@ -1,3 +1,10 @@
+Array.prototype.swap = function (x,y) {
+  var b = this[x];
+  this[x] = this[y];
+  this[y] = b;
+  return this;
+}
+
 var Filters = {};
 
 Filters.rotateLeft = function(args) {
@@ -6,8 +13,6 @@ Filters.rotateLeft = function(args) {
   var canvas = args.canvas;
   var context = args.context;
   var len = canvas.width * 4; // width == height
-
-  console.log(imgData);
 
   for ( var i = 0; i < len; i++ )
     for ( var j = 0; j < len; j++ )
@@ -23,38 +28,31 @@ Filters.rotateLeft = function(args) {
 Filters.invertHorizontal = function(args) {
   var imgData = args.imgData.data;
   var imgDataCopy = imgData.slice();
-  var canvas = args.canvas;
-  var context = args.context;
   var len = canvas.width * 4; // width == height
-
-  console.log(imgData);
+  // * 4 because for each pixel, there are 4 layers: r, g, b, a
 
   for ( var i = 0; i < len; i++ )
     for ( var j = 0, k = len - 4; j < len; j += 4, k -= 4 ) {
-      imgData[(i * len) + k] = imgDataCopy[(i * len) + j]; 
+      imgData[(i * len) + k]     = imgDataCopy[(i * len) + j]; 
       imgData[(i * len) + k + 1] = imgDataCopy[(i * len) + j + 1]; 
       imgData[(i * len) + k + 2] = imgDataCopy[(i * len) + j + 2]; 
       imgData[(i * len) + k + 3] = imgDataCopy[(i * len) + j + 3]; 
     }
-
+ 
   return args.imgData;
 };
 
 Filters.invertVertical = function(args) {
   var imgData = args.imgData.data;
   var imgDataCopy = imgData.slice();
-  var canvas = args.canvas;
-  var context = args.context;
   var len = canvas.width * 4; // width == height
 
-  console.log(imgData);
-
-  for ( var i = 0, k = len - 4; i < len; i += 4, k -= 4 ) {
-    for ( var j = 0; j < len; j++ )
-      imgData[(k * len) + k] = imgDataCopy[(i * len) + j]; 
-      imgData[(k * len) + k + 1] = imgDataCopy[(i * len) + j + 1]; 
-      imgData[(k * len) + k + 2] = imgDataCopy[(i * len) + j + 2]; 
-      imgData[(k * len) + k + 3] = imgDataCopy[(i * len) + j + 3]; 
+  for ( var i = 0; i < len; i += 4 )
+    for ( var j = 0, k = canvas.height - 1; j < canvas.height; j++, k-- ) {
+      imgData[(k * len) + i]     = imgDataCopy[(j * len) + i]; 
+      imgData[(k * len) + i + 1] = imgDataCopy[(j * len) + i + 1]; 
+      imgData[(k * len) + i + 2] = imgDataCopy[(j * len) + i + 2]; 
+      imgData[(k * len) + i + 3] = imgDataCopy[(j * len) + i + 3]; 
     }
 
   return args.imgData;

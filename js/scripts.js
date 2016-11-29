@@ -72,7 +72,7 @@ $(document).ready(function() {
 		
 		context.fillStyle = "black";
 	  context.font = "bold 20px Arial";
-	  context.fillText($('#writeInput').val(), 150, 400);	
+	  context.fillText($('#writeInput').val(), 150, 600);	
 	  $('#writeInput').val("");
 	  $('.form-group').hide();
 	});

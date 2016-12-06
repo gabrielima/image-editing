@@ -59,7 +59,7 @@ $(document).ready(function() {
 
 		var link = get('save');
 		link.href = get('canvas').toDataURL();
-		link.download = newImageName; 
+		link.download = newImageName;
 	});	
 
 	$('#reset').click(function (event) {
@@ -153,42 +153,6 @@ $(document).ready(function() {
 		}
 	});
 
-	// $('#draw').click(function(event) {
-	// 	draw = !draw;
-	// });
-
-	// $('canvas').on('mousemove', function(e) {
-	// 	if(draw) {
-	//  		if (!isDrawing)
-	// 	     return;
-		  
-	// 	  var x = e.pageX - context.offsetLeft;
-	// 	  var y = e.pageY - context.offsetTop;
-	// 	  var radius = 10; // or whatever
-	// 	  var fillColor = '#ff0000';
-
-	// 		context.fillCircle = function(x, y, radius, fillColor) {
-	//       context.moveTo(x,0);
-	//       context.lineTo(x,canvas.height);
-	//       context.moveTo(0,y);
-	//       context.lineTo(canvas.width,y);
-	//       context.stroke();
- //      };
-      
-
- //      context.fillCircle(x, y, radius, fillColor);
-	// 	};
-	// });
-
-	// $('canvas').on('mousedown', function(e) {
-	// 	if(draw)
-	//   	isDrawing = true;
-	// });
-
-	// $('canvas').on('mouseup', function(e) {
-	// 	if(draw)
-	// 	  isDrawing = false;
-	// });
 
 	function applyFilter(filter, args) {		
 		args.imgData = context.getImageData(0, 0, canvas.width, canvas.height);;

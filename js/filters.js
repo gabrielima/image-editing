@@ -75,35 +75,6 @@ Filters.contrast = function(args) {
   return args.imgData;
 };
 
-Filters.saturation = function(args) {
-  /* http://alienryderflex.com/saturation.html */
-
-  var imageData = args.imgData.data;
-  var value = args.data;
-
-  var Pr = .299;
-  var Pg = .587;
-  var Pb = .114;
-
-  for ( var i = 0; i < imageData.length; i += 4 ) {
-    var r = imageData[i];
-    var g = imageData[i+1];
-    var b = imageData[i+2];
-
-    var p = Math.sqrt(
-      (r * r * Pr) +
-      (g * g * Pg) +
-      (b * b * Pb) 
-    );
-
-    imageData[i] = p + (r - p) * value;
-    imageData[i+1] = p + (g - p) * value;
-    imageData[i+2] = p + (b - p) * value;
-  }
-
-  return args.imgData;
-};
-
 Filters.grayscale = function(args) {
   var imageData = args.imgData.data;
 
@@ -162,44 +133,6 @@ Filters.sepia = function(args) {
   return args.imgData;
 };
 
-Filters.blur = function(args) {
-  var imageData = args.imgData.data;
-
-  var filterMatrix = [
-   [0.0, 0.2,  0.0],
-   [0.2, 0.2,  0.2],
-   [0.0, 0.2,  0.0]
-  ];
-
-  var factor = 1.0;
-  var bias = 0.0;
-  var filterWidth = 3, filterHeight = 3;
-  
-  return Filters.convolution(imageData, filterMatrix, filterWidth, filterHeight, factor, bias);
-};
-
-Filters.convolution = function(imageData, filterMatrix, filterWidth, filterHeight, factor, bias) {
-  for ( var i = 0; i < imageData.length; i += 4 ) {
-    var red = 0.0, green = 0.0, blue = 0.0;
-
-    //multiply every value of the filter with corresponding image pixel
-    for( var filterY = 0; filterY < filterHeight; filterY++ )
-    for( var filterX = 0; filterX < filterWidth; filterX++ ) {
-      var imageX = (x - filterWidth / 2 + filterX + w) % w;
-      var imageY = (y - filterHeight / 2 + filterY + h) % h;
-      red += imageData[i] * filterMatrix[filterY][filterX];
-      green += imageData[i+1] * filterMatrix[filterY][filterX];
-      blue += imageData[i+2] * filterMatrix[filterY][filterX];
-    }
-
-    //truncate values smaller than zero and larger than 255
-    imageData[i] = min(max((factor * red + bias), 0), 255);
-    imageData[i+1] = min(max((factor * green + bias), 0), 255);
-    imageData[i+2] = min(max((factor * blue + bias), 0), 255);
-  }
-
-  return imageData;
-};
 
 Filters.crop = function(args) {
   var imgData = args.imgData.data;
@@ -238,6 +171,7 @@ Filters.box = function(args) {
         imgData[(i * len) + j]     = args.r;
         imgData[(i * len) + j + 1] = args.g;
         imgData[(i * len) + j + 2] = args.b;
+        imgData[(i * len) + j + 3] = 255;
       }
     }
  
